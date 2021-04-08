@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/creation_compte.png</file>
+        <file>images/harry-potter-et-l-ordre-du-phenix.jpg</file>
+    </qresource>
+</RCC>

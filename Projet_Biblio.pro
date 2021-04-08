@@ -1,4 +1,6 @@
 SOURCES += \
+    creationcompte.cpp \
+    imageitem.cpp \
     main.cpp \
     vueaccueil.cpp \
     vueempruntactif.cpp \
@@ -8,6 +10,9 @@ SOURCES += \
     vuetables_admin.cpp
 
 HEADERS += \
+    connection.h \
+    creationcompte.h \
+    imageitem.h \
     vueaccueil.h \
     vueempruntactif.h \
     vueemprunthistorique.h \
@@ -15,6 +20,8 @@ HEADERS += \
     vuelivre.h \
     vuetables_admin.h
 
-QT += widgets \
-      sql
+QT += sql widgets
+
+RESOURCES += \
+    Resources.qrc
 
