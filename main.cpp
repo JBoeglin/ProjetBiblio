@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("mysql-lpdiebiblio.alwaysdata.net");
     db.setDatabaseName("lpdiebiblio_bdd");
-    db.setUserName("229129_romain");
-    db.setPassword("romain6868@!");
+    db.setUserName("229129_jonathan");
+    db.setPassword("testlpdie1234");
     db.open();
 
     QSqlQuery query(db);
@@ -89,14 +89,11 @@ int main(int argc, char *argv[])
                               "Nom VARCHAR(20),"
                               "Date_de_naissance DATE)");
     query.exec(Auteur);
-    query.prepare("INSERT INTO Auteur(Prenom, Nom, Date_de_naissance) VALUES(:prenom, :nom, :datedenaissance')");
-    query.bindValue(":prenom", "Jonathan");
-    query.bindValue(":nom","BOEGLIN");
-    query.bindValue(":datedenaissance","1993.08.28");
+    query.prepare("INSERT INTO Auteur(Prenom, Nom, Date_de_naissance) VALUES(Jonathan, BOEGLIN, 1993.08.28')");
     query.exec();
+    query.prepare("INSERT INTO Auteur(Prenom, Nom, Date_de_naissance) VALUES(:prenom, :nom, 1995.02.21')");
     query.bindValue(":prenom", "Romain");
     query.bindValue(":nom","ZIRNHELD");
-    query.bindValue(":datedenaissance","1995.02.21");
     query.exec();
 
     //table Livre
@@ -108,16 +105,19 @@ int main(int argc, char *argv[])
                               "Image BLOB, "
                               "genreid INTEGER NOT NULL, "
                               "etatid INTEGER NOT NULL, "
-                              "FOREIGN KEY(genreid) REFERENCES Genre(ID_Genre), "
-                              "FOREIGN KEY(etatid) REFERENCES Etat(ID_Etat))");
+                              "langueid INTEGER NOT NULL, "
+                              "auteurid INTEGER NOT NULL, ");
     query.exec(Livre);
-    query.prepare("INSERT INTO Livre(Titre, Année, Disponibilité,Image, genreid, etatid) VALUES(:titre,:annee,:dispo,:img,:genreid, :etatid)");
+
+    query.prepare("INSERT INTO Livre(Titre, Année, Disponibilité,Image, genreid, etatid,langueid,auteurid) VALUES(:titre,:annee,:dispo,:img,:genreid, :etatid, :langueid, :auteurid)");
     query.bindValue(":titre","Jonathan");
     query.bindValue(":annee",1901);
     query.bindValue(":dispo",1);
     query.bindValue(":img","harry-potter-et-l-ordre-du-phenix.jpg");
     query.bindValue(":genreid",1);
     query.bindValue(":etatid",1);
+    query.bindValue(":langueid",1);
+    query.bindValue(":auteurid",1);
     query.exec();
     //table Emprunt
     QString Emprunt = QString("CREATE TABLE IF NOT EXISTS Emprunt("
@@ -130,10 +130,8 @@ int main(int argc, char *argv[])
                               "CONSTRAINT PK_Emprunt PRIMARY KEY (ID_Emprunt, livreid))");
                               //"CONSTRAINT FK_Emprunt2 FOREIGN KEY(utilisateurid) REFERENCES Utilisateur(ID_Utilisateur),"
     query.exec(Emprunt);
-    query.prepare("INSERT INTO Livre(livreid, Date_Debut, Date_Fin) VALUES (:livreid, :datedebut, :datefin)");
+    query.prepare("INSERT INTO Livre(livreid, Date_Debut, Date_Fin) VALUES (:livreid, 1987.03.25, 1989.06.24)");
     query.bindValue(":livreid",1);
-    query.bindValue(":datedebut","1987.03.25");
-    query.bindValue(":datefin","1989.06.24");
     query.exec();
 
 
@@ -156,12 +154,11 @@ int main(int argc, char *argv[])
     query.exec(Utilisateur);
     query.exec();
     query.prepare("INSERT INTO Utilisateur(Nom, Prenom, Login, Mdp, Date_de_naissance, Code_Postal, Adresse, Ville, Email, Tel, Blacklist) VALUES("
-                                            ":nomU, :prenomU, :login, :mdp, :dateN, :codeP, :adresse, :ville, :email, :tel, :blacklist)");
+                                            ":nomU, :prenomU, :login, :mdp, 1989.01.01, :codeP, :adresse, :ville, :email, :tel, :blacklist)");
     query.bindValue(":nomU","Paire");
     query.bindValue(":prenomU","Benoit");
     query.bindValue(":login","KeepCalm");
     query.bindValue(":mdp","6inarow");
-    query.bindValue(":dateN","1989.01.01");
     query.bindValue("codeP",66666);
     query.bindValue(":ville","troupaumé");
     query.bindValue(":adresse","quelquepart");
@@ -173,6 +170,11 @@ int main(int argc, char *argv[])
     //clé composé table jointure
     Emprunt = QString("ALTER TABLE Emprunt ADD CONSTRAINT FK_Emprunt2 FOREIGN KEY(utilisateurid) REFERENCES Utilisateur(ID_Utilisateur)");query.exec(Emprunt);
     Emprunt = QString("ALTER TABLE Emprunt ADD CONSTRAINT PK_Emprunt2 PRIMARY KEY (ID_Emprunt, livreid, utilisateurid)");query.exec(Emprunt);
+
+    Livre = QString("ALTER TABLE Livre ADD CONSTRAINT FK_Livre FOREIGN KEY(genreid) REFERENCES Genre(ID_Genre)"); query.exec(Livre);
+    Livre = QString("ALTER TABLE Livre ADD CONSTRAINT FK_Livre1 FOREIGN KEY(auteurid) REFERENCES Auteur(ID_Auteur)"); query.exec(Livre);
+    Livre = QString("ALTER TABLE Livre ADD CONSTRAINT FK_Livre2 FOREIGN KEY(langueid) REFERENCES Langue(ID_Langue)"); query.exec(Livre);
+    Livre = QString("ALTER TABLE Livre ADD CONSTRAINT FK_Livre3 FOREIGN KEY(etatid) REFERENCES Etat(ID_Etat)"); query.exec(Livre);
     //query.prepare("INSERT INTO Livre(livreid, utilisateurid, Date_Debut, Date_Fin) VALUES ('1','1', '1987.03.25', '1989.06.24')");query.exec();
 
     Q_INIT_RESOURCE(Resources);
