@@ -15,7 +15,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+    Q_INIT_RESOURCE(Resources);
     //ouvrir BDD
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("mysql-lpdiebiblio.alwaysdata.net");
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
                               "genreid INTEGER NOT NULL, "
                               "etatid INTEGER NOT NULL, "
                               "langueid INTEGER NOT NULL, "
-                              "auteurid INTEGER NOT NULL, ");
+                              "auteurid INTEGER NOT NULL)");
     query.exec(Livre);
 
     query.prepare("INSERT INTO Livre(Titre, Année, Disponibilité,Image, genreid, etatid,langueid,auteurid) VALUES(:titre,:annee,:dispo,:img,:genreid, :etatid, :langueid, :auteurid)");
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     query.exec(Utilisateur);
     query.exec();
     query.prepare("INSERT INTO Utilisateur(Nom, Prenom, Login, Mdp, Date_de_naissance, Code_Postal, Adresse, Ville, Email, Tel, Blacklist) VALUES("
-                                            ":nomU, :prenomU, :login, :mdp, 1989.01.01, :codeP, :adresse, :ville, :email, :tel, :blacklist)");
+                                            ":nomU, :prenomU, :login, :mdp, 1989-01-01, :codeP, :adresse, :ville, :email, :tel, :blacklist)");
     query.bindValue(":nomU","Paire");
     query.bindValue(":prenomU","Benoit");
     query.bindValue(":login","KeepCalm");
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
     Livre = QString("ALTER TABLE Livre ADD CONSTRAINT FK_Livre3 FOREIGN KEY(etatid) REFERENCES Etat(ID_Etat)"); query.exec(Livre);
     //query.prepare("INSERT INTO Livre(livreid, utilisateurid, Date_Debut, Date_Fin) VALUES ('1','1', '1987.03.25', '1989.06.24')");query.exec();
 
-    Q_INIT_RESOURCE(Resources);
+
 
     if (!createConnection())
         return EXIT_FAILURE;
